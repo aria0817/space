@@ -1,6 +1,12 @@
-typescript 
+## typescript 
 
-### 1. 原始数据类型
+### 导入和导出方式
+module: commonjs 选项以及使用 ES 模块语法导入、导出、编写模块。
+如果是
+```
+
+```
+### 原始数据类型
 #### 1.原始数据类型包括：布尔值、数值、字符串、null、undefined 以及 ES6 中的新类型 Symbol 和 ES10 中的新类型 BigInt。
 
 空值：void 没有任何返回值，一般用于没有任何返回值的函数
@@ -56,8 +62,11 @@ function isFish(animal: Cat | Fish) {
  ```
 
 
-### 1. Data type 
+### Data type 
 #### 1. TypeScript - Tuples
+
+### 1. Data type 
+1. TypeScript - Tuples
 
 ```
 其实和数组类似，但是会限定类型。能够使用数组的方法，比如push、pop等。
@@ -66,6 +75,8 @@ var person: [number, string, boolean] = [1, "Steve", true];
 ```
 
 #### 2. enmu 枚举
+2. enmu 枚举
+
 * Numeric enum  [1,2,3]
 * String enum ['a','d','e']
 * Heterogeneous enum [1,false]
@@ -214,6 +225,11 @@ extends继承，一个新的接口或者类，从父类或者接口继承所有�
 interface vs type
 interface 支持 declaration merging，而 type alias 不支持。
 type 支持很多数据类型的定义，比如： a union, primitive, intersection, tuple, or any other type 【Tuples：它包括不同数据类型的值, ['test',1,false]，还可以push、concat等数组方法】
+```
+
+
+
+### 2. interface 和 type
 
 ```javascript
 interface X {
