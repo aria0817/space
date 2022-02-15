@@ -1,6 +1,4 @@
-## typescript介绍
-
-
+# typescript介绍
 ### 1.基础介绍
 
 #### 1.原始数据类型包括：布尔值、数值、字符串、null、undefined 以及 ES6 中的新类型 Symbol 和 ES10 中的新类型 BigInt。
@@ -381,5 +379,9 @@ const b = getValue(obj,'b') => error
    *  instanceof: 用于判断一个实例是否属于某个类
    *  in: 用于判断一个属性/方法是否属于某个对象
 3. 双重断言 【除非迫不得已，千万别用双重断言】
+
+
+
+
 
 
