@@ -1,12 +1,6 @@
-## typescript 
+# typescript介绍
+### 1.基础介绍
 
-### 导入和导出方式
-module: commonjs 选项以及使用 ES 模块语法导入、导出、编写模块。
-如果是
-```
-
-```
-### 原始数据类型
 #### 1.原始数据类型包括：布尔值、数值、字符串、null、undefined 以及 ES6 中的新类型 Symbol 和 ES10 中的新类型 BigInt。
 
 空值：void 没有任何返回值，一般用于没有任何返回值的函数
@@ -23,6 +17,7 @@ let num:string = undefined
 
 #### 2. 任意值
 any 声明一个变量为any后，无论任何操作，返回的类型都是any。未声明类型会被识别为any
+
 #### 3. 函数重载
 重载允许一个函数接受不同数量或类型的参数时，作出不同的处理。
 ```
@@ -38,7 +33,7 @@ function reverse(x: number | string): number | string | void {
 ts会从最前面的定义开始匹配，所以能够实现输入参数和输出参数类型一致
 ```
 
-### 类型断言
+### 2. 类型断言
 手动指定一个值的类型 值 as 类型/ <类型>值
 用途：
  * 将一个联合类型断言为其中一个类型 
@@ -62,11 +57,8 @@ function isFish(animal: Cat | Fish) {
  ```
 
 
-### Data type 
+### 3.类型
 #### 1. TypeScript - Tuples
-
-### 1. Data type 
-1. TypeScript - Tuples
 
 ```
 其实和数组类似，但是会限定类型。能够使用数组的方法，比如push、pop等。
@@ -75,8 +67,6 @@ var person: [number, string, boolean] = [1, "Steve", true];
 ```
 
 #### 2. enmu 枚举
-2. enmu 枚举
-
 * Numeric enum  [1,2,3]
 * String enum ['a','d','e']
 * Heterogeneous enum [1,false]
@@ -109,7 +99,8 @@ console.log(Days["Sat"] === 6); // true
 
 ```
 
-#### 3. 类  和es6的类差不多 TypeScript提供三种修饰符
+#### 3. 类 
+TypeScript提供三种修饰符
 ##### 修饰符：
 public:公用属性，在任何地方都可以访问到。默认的方法和属性都是public
 private: 私有属性/方法，只能在类的内部访问
@@ -121,6 +112,7 @@ readonly，有其他修饰符，它需要写在后面
 ##### 抽象类 abstract    why??
 定义抽象类和其中的抽象方法。抽象类是不允许被实例化
 
+##### 例子：
 ```
 公用的报警功能
 interface Alarm {
@@ -195,10 +187,9 @@ printPoint(new Point(1, 2));
 ```
 ##### 类也可以合并，和接口合并一样
 
-#### 4. interface implements  type
-
-interface 接口：对象的形状结构进行描述
-接口可以支持合并，如果相同属性，类型如果不同就会报错
+#### 4.interface vs implements vs type
+##### interface接口
+对象的形状结构进行描述。接口可以支持合并，如果相同属性，类型如果不同就会报错。
 ```
 interface Alarm {
     price: number;
@@ -214,24 +205,18 @@ interface Alarm {
 }
 ```
 
+##### implements实现
+一般来说，一个类只能继承自另一个类，有时候不同类之间可以有一些共有的特性，这时候就可以把特性提取成接口（interfaces），用 implements 关键字来实现
 
-implements 实现：一般来说，一个类只能继承自另一个类，有时候不同类之间可以有一些共有的特性，这时候就可以把特性提取成接口（interfaces），用 implements 关键字来实现
-
-
-implements vs extends
+##### implements vs extends
 implements实现，一个新的类，从父类或者接口实现所有的属性和方法，【同时可以重写属性和方法】，包含一些新的功能
 extends继承，一个新的接口或者类，从父类或者接口继承所有的属性和方法，【不可以重写属性】，但可以重写方法
 
-interface vs type
+##### interface vs type
 interface 支持 declaration merging，而 type alias 不支持。
 type 支持很多数据类型的定义，比如： a union, primitive, intersection, tuple, or any other type 【Tuples：它包括不同数据类型的值, ['test',1,false]，还可以push、concat等数组方法】
+
 ```
-
-
-
-### 2. interface 和 type
-
-```javascript
 interface X {
     a: number
     b: string
@@ -327,7 +312,7 @@ myGenericNumber.add = function(x, y) { return x + y; };
 ```
 
 
-### 2. .d.ts 
+### 3. .d.ts 
 
 1. 第三方声明文件：
    当在 TypeScript 项目中使用第三方库时，我们需要引用它的声明文件，才能获得对应的代码补全、接口提示等功能。https://www.npmjs.com/~types
@@ -352,8 +337,8 @@ https://juejin.cn/post/6987735091925483551#heading-6
 
 
 
-### 小技巧
-#### 善用高级类型
+### 4.小技巧
+#### 1.善用高级类型
 
 1. 索引类型 keyof 类似于Object.keyof 
 2. 约束类型 extends 对泛型加以约束
@@ -386,7 +371,7 @@ const b = getValue(obj,'b') => error
    ```
 
 
-#### 善用类型收窄【类型收窄就是从**宽类型**转换成**窄类型**的过程】
+#### 2.善用类型收窄【类型收窄就是从**宽类型**转换成**窄类型**的过程】
 
 1. 类型断言   值 as 类型 或者 <类型>值 
 2. 类型守卫
@@ -394,3 +379,9 @@ const b = getValue(obj,'b') => error
    *  instanceof: 用于判断一个实例是否属于某个类
    *  in: 用于判断一个属性/方法是否属于某个对象
 3. 双重断言 【除非迫不得已，千万别用双重断言】
+
+
+
+
+
+
