@@ -1,16 +1,3 @@
-const name = "hello";
-
-const makeFunc = () => {
-   
-  const name = "Closure Func";
-
-  const dispalyName = () => {
-    console.log(name);
-  };
-
-  return dispalyName;
-};
-
-const myFunc = makeFunc();
-
-myFunc();
+// 函数内部可以访问到外层函数的作用域 
+// 使用场景： 创建私有变量 延长变量使用的生命周期
+// 比如在JQ中也有用到闭包  一个沙箱环境就是一个闭包 惰性函数（ 可以用在浏览器兼容中 
