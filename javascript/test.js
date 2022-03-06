@@ -23,59 +23,84 @@
 
 // function sum(arr){
 //     if(!arr.length){
-//         return 0
-//     }else if (arr.length == 1){
-//        return arr[0]
-//     }else{
-//        return arr[0] + sum(arr.slice(1));
-//     }
-// }
+// //         return 0
+// //     }else if (arr.length == 1){
+// //        return arr[0]
+// //     }else{
+// //        return arr[0] + sum(arr.slice(1));
+// //     }
+// // }
 
-// console.log(sum([1,2,3]));
-// 如果执行完了就可以被执行 如果没有执行完就什么都不做
-// function (fn,delay){
-//     let timer = null;
-//     return function(...args){
-//         if (!timer) {
-//             timer = setTimeout(() => {
-//                 fn.apply(this,args);
-//                 timer = null;
-//             },delay)
-//         }
-//     }
-// }
+// // console.log(sum([1,2,3]));
+// // 如果执行完了就可以被执行 如果没有执行完就什么都不做
+// // function (fn,delay){
+// //     let timer = null;
+// //     return function(...args){
+// //         if (!timer) {
+// //             timer = setTimeout(() => {
+// //                 fn.apply(this,args);
+// //                 timer = null;
+// //             },delay)
+// //         }
+// //     }
+// // }
 
-// function debounce (fn,wait){
+// // function debounce (fn,wait){
+// //     let timer = null
+// //     return function(...args){
+// //         let context = this; // 保存this指向
+// //         clearTimeout(timer)
+// //         timer = setTimeout(() => {
+// //             fn.apply(context,args)
+// //         }, wait);
+// //     }
+// // }
+
+// function debounce(fn, wait, immediate) {
 //     let timer = null
-//     return function(...args){
+//     return function (...args) {
 //         let context = this; // 保存this指向
-//         clearTimeout(timer)
-//         timer = setTimeout(() => {
-//             fn.apply(context,args)
-//         }, wait);
+//         if (timer) clearTimeout(timer)
+
+//         if (immediate) {
+//             let callNow = !timer; // 第一次会立即执行，以后只有事件执行后才会再次触发
+//             timeout = setTimeout(function () {
+//                 timeout = null;
+//             }, wait)
+//             if (callNow) {
+//                 fn.apply(context, args)
+//             }
+
+//         } else {
+//             timer = setTimeout(() => {
+//                 fn.apply(context, args)
+//             }, wait);
+//         }
+
 //     }
 // }
 
-function debounce(fn, wait, immediate) {
-    let timer = null
+
+
+// throttled 节流 不管点击多少次 只有一次有效
+function throttled(fn, delay) {
+    let timer = null;
+    let last=0;
     return function (...args) {
-        let context = this; // 保存this指向
-        if (timer) clearTimeout(timer)
-
-        if (immediate) {
-            let callNow = !timer; // 第一次会立即执行，以后只有事件执行后才会再次触发
-            timeout = setTimeout(function () {
-                timeout = null;
-            }, wait)
-            if (callNow) {
-                fn.apply(context, args)
-            }
-
-        } else {
-            timer = setTimeout(() => {
-                fn.apply(context, args)
-            }, wait);
+        let now = Date.now()
+        let remaining = delay-(now-last); //还剩下多少时间
+        clearTimeout(timer);
+        clearTimeout(timer)
+        if (remaining <= 0) { // 第一次可以执行
+            fn.apply(this, args)
+            last = now
+        } else { 
+             setTimeout(()=>{
+                fn.apply(this,args);
+            }, remaining);
         }
-
     }
 }
+
+// 防抖
+function debounce(fn,delay)
