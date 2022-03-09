@@ -55,7 +55,8 @@ XSS 的原理:
 * HttpOnly Cookie 
 这是预防XSS攻击窃取用户cookie最有效的防御手段。Web应用程序在设置cookie时，将其属性设为HttpOnly，就可以避免该网页的cookie被客户端恶意JavaScript窃取，保护用户cookie信息。(js无法读取cookie的信息)
 
-
+<br><br>
+<br>
 #### 2. CSRF(Cross Site Request Forgery) 即跨站请求
 它利用用户已登录的身份，在用户毫不知情的情况下，以用户的名义完成非法操作。
 ![alt](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/1/24/1688030a24702301~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
@@ -76,6 +77,7 @@ XSS 的原理:
 3）Anti CSRF Token: 即发送请求时在HTTP 请求中以参数的形式加入一个随机产生的token，并在服务器建立一个拦截器来验证这个token。服务器读取浏览器当前域cookie中这个token值，会进行校验该请求当中的token和cookie当中的token值是否都存在且相等，才认为这是合法的请求。否则认为这次请求是违法的，拒绝该次服务。
 4) 验证码:应用程序和用户进行交互过程中，特别是账户交易这种核心步骤，强制用户输入验证码，才能完成最终请求。在通常情况下，验证码够很好地遏制CSRF攻击。但增加验证码降低了用户的体验，网站不能给所有的操作都加上验证码。所以只能将验证码作为一种辅助手段，在关键业务点设置验证码。
 
+<br><br><br>
 
 3. 点击挟持 ：是一种视觉欺骗的攻击手段。攻击者将需要攻击的网站通过 iframe 嵌套的方式嵌入自己的网页中，并将 iframe 设置为透明，在页面中透出一个按钮诱导用户点击。
 
@@ -109,6 +111,8 @@ XSS 的原理:
   </script>
 </body>
 ```
+
+<br><br>
 
 4. URL跳转漏洞:借助未验证的URL跳转，将应用程序引导到不安全的第三方区域，从而导致的安全问题。
 原理:
