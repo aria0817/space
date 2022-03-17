@@ -25,7 +25,7 @@ console.log(3) // 同步任务
 // 当所有同步任务执行完成以后，会查看微任务列表的队列，将所有的微任务全部执行完成后，在去执行下一个宏任务。
 
 
-// async: 异步方法  await:等待这个异步方法执行的结果    await 会阻塞后面的代码（即加入微任务队列）
+// async: 异步方法  await:等待这个异步方法执行的结果   !await 会阻塞后面的代码（即加入微任务队列）
 async function fn1 (){
     console.log(1) // 立即执行
     await fn2() // 执行当前函数，并且阻塞后后面的代码
@@ -35,6 +35,10 @@ async function fn1 (){
         resolve()
     }).then(()=>{
         console.log('then');
+    }).then(()=>{
+        console.log('then 2');
+    }).then(()=>{
+        console.log('then 3');
     })
 }
 
