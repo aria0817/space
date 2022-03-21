@@ -6,7 +6,7 @@
 1. 作用：
 * 为各种数据结构，提供一个统一的、渐变的访问接口。
 * 使数据结构的成员能够按某种次序排列。
-* ES6创造了一种新的遍历命令for...of循环，Iterator 接口主要供for...of循环。
+* ES6创造了一种新的遍历命令for...of循环，Iterator 接口主要供for...of消费。
 
 2. 遍历过程：
 （1）创建一个指针对象，指向当前数据结构的起始位置。也就是说，遍历器对象本质上，就是一个指针对象。
@@ -30,7 +30,7 @@ function makeIterator(array) {
 ```
 
 ### 2. 默认Iterator 接口
-Iterator 接口的目的，就是为所有数据结构，提供了一种统一的访问机制，即for...of循环（详见下文）。当使用for...of循环遍历某种数据结构时，该循环会自动去寻找 Iterator 接口。ES6 规定，默认的 Iterator 接口部署在数据结构的Symbol.iterator属性，或者说，一个数据结构只要具有Symbol.iterator属性，就可以认为是“可遍历的”（iterable）。
+Iterator 接口的目的，就是为所有数据结构，提供了一种统一的访问机制，即for...of循环（详见下文）。当使用for...of循环遍历某种数据结构时，该循环会自动去寻找 Iterator 接口，依次执行迭代器对象的next方法，将next的返回值赋予给for of内的变量。ES6 规定，默认的 Iterator 接口部署在数据结构的Symbol.iterator属性，或者说，一个数据结构只要具有Symbol.iterator属性，就可以认为是“可遍历的”（iterable）。
 <br>
 
 原生具备 Iterator 接口的数据结构的有Array、Map、Set、String、TypedArray、函数的 arguments 对象、NodeList 对象。
