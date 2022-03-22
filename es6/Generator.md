@@ -177,3 +177,243 @@ gen.return(2); // Object {value: 2, done: true}
 // 相当于将 let result = yield x + y
 // 替换成 let result = return 2;
 ```
+
+### yield* 表达式
+用来在一个 Generator 函数里面执行另一个 Generator 函数。相当于直接加载这个函数的内容到外层的函数里面。
+```
+function* bar() {
+  yield 'x';
+  yield* foo();
+  yield 'y';
+}
+
+// 等同于
+function* bar() {
+  yield 'x';
+  yield 'a';
+  yield 'b';
+  yield 'y';
+}
+
+// 等同于
+function* bar() {
+  yield 'x';
+  for (let v of foo()) {
+    yield v;
+  }
+  yield 'y';
+}
+
+for (let v of bar()){
+  console.log(v);
+}
+
+```
+yield表达式返回整个字符串，yield*语句返回单个字符
+```
+function* gen(){
+  yield* ["a", "b", "c"];
+}
+
+function* gen1(){
+  yield ["a", "b", "c"];
+}
+
+gen().next()  // a 
+gen1().next() // 返回值为["a", "b", "c"]
+
+```
+拉平数组
+```
+function* iterTree(tree) {
+  if (Array.isArray(tree)) {
+    for(let i=0; i < tree.length; i++) {
+      yield* iterTree(tree[i]);
+    }
+  } else {
+    yield tree;
+  }
+}
+
+const tree = [ 'a', ['b', 'c'], ['d', 'e'] ];
+[...iterTree(tree)] // 直接消费
+<!-- for(let x of iterTree(tree)) {
+  console.log(x);
+} -->
+```
+
+### 应用
+Generator 与状态机
+```
+var clock = function* () {
+    while (true) {
+        console.log('Tick!');
+        yield;
+        console.log('Tock!');
+        yield;
+    }
+};
+let g = clock()
+```
+
+1. 异步操作的同步化表达
+
+```
+function* loadUI() {
+  showLoadingScreen();
+  yield loadUIDataAsynchronously();
+  hideLoadingScreen();
+}
+var loader = loadUI();
+// 加载UI
+loader.next()
+
+// 卸载UI
+loader.next()
+```
+
+2. 部署 Iterator 接口 
+可以在对象上部署Iterator
+```
+
+function* iterEntries(obj) {
+  let keys = Object.keys(obj);
+  for (let i=0; i < keys.length; i++) {
+    let key = keys[i];
+    yield [key, obj[key]];
+  }
+}
+
+let myObj = { foo: 3, bar: 7 };
+
+for (let [key, value] of iterEntries(myObj)) {
+  console.log(key, value);
+}
+
+```
+
+3. 作为数据结构
+Generator 可以看作是数据结构，更确切地说，可以看作是一个数组结构，因为 Generator 函数可以返回一系列的值，这意味着它可以对任意表达式，提供类似数组的接口。
+```
+function* doStuff() {
+  yield fs.readFile.bind(null, 'hello.txt');
+  yield fs.readFile.bind(null, 'world.txt');
+  yield fs.readFile.bind(null, 'and-such.txt');
+}
+for (task of doStuff()) {
+  // task是一个函数，可以像回调函数那样使用它
+}
+```
+<br>
+
+## Generator 函数的异步应用
+JavaScript 语言的执行环境是“单线程”的，如果没有异步编程，根本没法用，非卡死不可。出现了以下几个方法来解决同步问题。
+* 回调函数
+* 事件监听
+* 发布/订阅
+* Promise 对象
+
+回调函数
+```
+fs.readFile('/etc/passwd', 'utf-8', function (err, data) {
+  if (err) throw err;
+  console.log(data);
+});
+回调函数的第一个参数，必须是错误对象.因为第一段执行完以后，任务所在的上下文环境就已经结束了。在这以后抛出的错误，原来的上下文环境已经无法捕捉，只能当作参数，传入第二段。
+```
+
+
+Promise 的最大问题是代码冗余，原来的任务被 Promise 包装了一下，不管什么操作，一眼看去都是一堆then，原来的语义变得很不清楚。
+```
+fs.readFile(fileA, 'utf-8', function (err, data) {
+  fs.readFile(fileB, 'utf-8', function (err, data) {
+    // ...
+  });
+});
+
+
+var readFile = require('fs-readfile-promise');
+readFile(fileA)
+.then(function (data) {
+  console.log(data.toString());
+})
+.then(function () {
+  return readFile(fileB);
+})
+
+```
+
+
+
+
+协程的 Generator 函数实现，最大特点就是可以交出函数的执行权（即暂停执行）。
+```
+//由于Fetch模块返回的是一个 Promise 对象，因此要用then方法调用下一个next方法。
+var fetch = require('node-fetch');
+
+function* gen(){
+  var url = 'https://api.github.com/users/github';
+  var result = yield fetch(url);
+  console.log(result.bio);
+}
+
+var g = gen();
+var result = g.next();
+
+result.value.then(function(data){
+  return data.json();
+}).then(function(data){
+  g.next(data);
+});
+
+```
+
+### Genreator函数的自动执行
+总结：
+
+* 由于yield表达式可以暂停执行，next方法可以恢复执行，这使得Generator函数很适合用来将异步任务同步化。
+* 但是Generator函数的流程控制会稍显麻烦，因为每次都需要手动执行next方法来恢复函数执行，并且向next方法传递参数以输出上一个yiled表达式的返回值。
+* 于是就有了thunk(thunkify)函数和co模块来实现Generator函数的自动流程控制。
+* 通过thunk(thunkify)函数分离参数，以闭包的形式将参数逐一传入，再通过apply或者call方法调用，然后配合使用run函数可以做到自动流程控制。
+* 通过co模块，实际上就是将run函数和thunk(thunkify)函数进行了封装，并且yield表达式同时支持thunk(thunkify)函数和Promise对象两种形式，使得自动流程控制更加的方便。
+
+```
+var fs = require('fs');
+
+var readFile = function (fileName){
+  return new Promise(function (resolve, reject){
+    fs.readFile(fileName, function(error, data){
+      if (error) return reject(error);
+      resolve(data);
+    });
+  });
+};
+
+var gen = function* (){
+  var f1 = yield readFile('/etc/fstab');
+  var f2 = yield readFile('/etc/shells');
+  console.log(f1.toString());
+  console.log(f2.toString());
+};
+
+// 自动执行 用递归调用执行
+function run(gen){
+  var g = gen();
+
+  function next(data){
+    var result = g.next(data);
+    if (result.done) return result.value;
+    result.value.then(function(data){
+      next(data);
+    });
+  }
+
+  next();
+}
+
+run(gen);
+```
+
+
+
+
