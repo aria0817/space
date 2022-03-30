@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+</html>
+
+<script>
+    // 这里的mount存在什么问题呢
+    function mountElement(vnode, container) {
+        const el = document.createElement(vnode.tag);
+        // 没有将VNodeData的数据应用在元素上
+        const data = vnode.data;
+        if (data) {
+            // 遍历
+            for (const key in data) {
+                switch (key) {
+                    case 'style':
+                        for (const k in data.style) {
+                            el.style[k] = data.style[k]
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+        // VNode 被渲染为真实DOM之后，没有引用真实DOM元素   --- 会有什么问题呢
+        vnode.el = el;
+        // 如果有子节点
+
+
+        container.appendChild(el);
+
+    }
+    const app = document.getElementById('app');
+    const elementVnode = h(
+        'div',
+        {
+            style: {
+                height: '100px',
+                width: '100px',
+                background: 'red'
+            }
+        },
+        h('div', {
+            style: {
+                height: '50px',
+                width: '50px',
+                background: 'green'
+            }
+        })
+    )
+    // h函数是生成各种vnode 
+    const vnode = {
+        tag: 'div',
+        data: {
+            style: {
+                color: 'pink', width: '200px', height: '200px', backgroundColor: 'pink'
+            }
+        },
+        children: [
+            {
+                tag: 'div',
+                data: {
+                    style: {
+                        backgroundColor: 'black',
+                        width: '20px', height: '400px'
+                    }
+                }
+            }
+        ]
+    }
+    mountElement(vnode, app)
+</script>
